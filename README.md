@@ -25,7 +25,7 @@ lib/config.php Configuration file.
 lib/data/	Text files content. 
 
 # License
-OnePage Radio Web GPLv4 http://github.com/libre/onepageradio-player/
+OnePage Radio Web GPLv4 https://github.com/libre/onepage-radio-player
 The PHP page that serves all page requests on WebExploitScan installation.
 
 The routines here dispatch control to the appropriate handler, which then
