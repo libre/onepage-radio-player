@@ -10,10 +10,12 @@
 - JM Player JS 
 - All manage content by text file. 
 - Program scheduling week by CSV file. 
+- Compatible Shoutcast / Icecast 
+- MP3 / OGG Android compliance. 
 
 
 # Version
-1.0
+1.1
 
 # Code:
 - PHP

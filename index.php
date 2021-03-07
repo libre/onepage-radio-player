@@ -12,21 +12,26 @@
  */
 include_once "lib/config.php"; 
 function headerhtml() {
-	global $siteURL, $GoogleTAG, $Title, $MetaTitle, $MetaDescription,$sitename,$urlMetaLogo;
-	echo '<!DOCTYPE html>
+	global $siteURL, $GoogleTAG, $Title, $MetaTitle, $MetaDescription,$sitename,$urlMetaLogo, $streamname, $streamurl, $streamheader, $streamport, $Mount, $supply, $autoPlay;
+	// Footer Copyright
+	$copyright="Copyright 2020 OnePage Radio Player"; 
+	// Data file store. 
+	$DATASTORE="lib/data";
+	;
+	echo '<!-- Radio Player Onepage Copyleft 2021 Libre. License: https://github.com/libre/radio-one-page/blob/master/LICENSE.txt -->
 	<html lang="en">
 	<head>
 	<title>'; echo $Title; echo '</title>
 	<meta charset="UTF-8" />
 	  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-		<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.css" />  	  		
+		<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.css" /> 
 		<!-- boostrap -->
 		<!-- Created by expert4it.com -->
 		<!-- Created by studiocreation.be -->
 		<!-- Created by expresshoster.com -->
 		<link rel="stylesheet" href="assets/animate.css">
 		<link rel="stylesheet" href="assets/style.css">
-		<link rel="stylesheet" href="assets/css/jm-player.css">
+		<!-- <link rel="stylesheet" href="assets/css/jm-player.css"> -->
 		<link rel="stylesheet" href="assets/css/animate.min.css">
 		<link href="assets/css/all.css" rel="stylesheet"> <!--load all styles -->
 		<meta name="description" content="'; echo $MetaDescription ; echo '"/>
@@ -57,7 +62,47 @@ function headerhtml() {
 
   gtag(\'config\', \''; echo $GoogleTAG; echo '\');
 </script>
-		<link rel="icon" href="fav.ico" />
+<link href="dist/skin/pink.flag/css/jplayer.pink.flag.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="dist/jplayer/jquery.jplayer.js"></script>
+<script type="text/javascript">
+//<![CDATA[
+$(document).ready(function(){
+
+	var stream = {
+		title: "'; echo $streamname; echo '",
+		mp3: "'; echo $streamheader; echo $streamurl; if (!empty($streamport)) { echo ":$streamport"; } echo "/$Mount"; echo '"
+	},
+	ready = false;
+
+	$("#jquery_jplayer_1").jPlayer({
+		ready: function (event) {
+			ready = true;
+			$(this).jPlayer("setMedia", stream);
+		},
+		pause: function() {
+			$(this).jPlayer("clearMedia");
+		},
+		error: function(event) {
+			if(ready && event.jPlayer.error.type === $.jPlayer.error.URL_NOT_SET) {
+				// Setup the media stream again and play it.
+				$(this).jPlayer("setMedia", stream).jPlayer("play");
+			}
+		},
+		swfPath: "dist/jplayer",
+		supplied: "'; echo $supply; echo '",
+		preload: "none",
+		wmode: "window",
+		useStateClassSkin: true,
+		autoBlur: false,
+		keyEnabled: true
+	});
+
+});
+//]]>
+</script>
+
+<link rel="icon" href="fav.ico" />
 	</head>
 	<body>
 
@@ -142,20 +187,12 @@ function footerhtml() {
 	  </div>
 	</div>
 	<!-- background slider -->
-
-	  <script src="http://code.jquery.com/jquery-1.7.1.min.js" type="text/javascript" ></script>
 	  <!-- boostrap -->
-	  <script src="assets/bootstrap/js/bootstrap.js" type="text/javascript" ></script>
-	  <script src="assets/scripts/plugins.js" type="text/javascript"></script>
-	  <script src="assets/scripts/script.js" type="text/javascript"></script>
-
-	<script src="jplayer/jquery.jplayer.js"></script>
-	<script>
-		var streaming = "'; echo $streamurl ; echo '";
-	</script>
-	<script src="assets/js/jm-player.js"></script>
-	<script src="assets/js/wow.min.js"></script>
-	<script>
+ 	   <script src="assets/bootstrap/js/bootstrap.js" type="text/javascript" ></script>
+ 	   <script src="assets/scripts/plugins.js" type="text/javascript"></script>
+ 	   <script src="assets/scripts/script.js" type="text/javascript"></script>
+	   <script src="assets/js/wow.min.js"></script>
+	   <script>
 		wow = new WOW(
 			{
 				animateClass: \'animated\',
@@ -215,36 +252,32 @@ echo '
 	<div class="col-sm-5 col-xs-12 col-sm-offset-1">
 	<div class="player" id="player">
 	<img src="assets/images/logobig.png" class="graphics hidden-xs  animated fadeInRightBig" alt="dj"/>
-	
-	<section id="bar-player">
-                <div class="top wow flipInY" data-wow-delay="0.5s">
-                    <button class="toggle">
-                        <i class="material-icons">play_circle_filled</i>
-                    </button>
-                    <div class="status" title="Status da rádio">
-                        <span class="led"></span><span class="value"></span>
-                    </div>
-                    <div class="info">
-                        <div class="current"><span>Recherche programme</span></div>
-                    </div>
-                    <div class="hidden-xs">
-                        <div class="volume">
-                            <i class="material-icons" title="Mudo">volume_up</i>
-                            <div class="input"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="container hidden-all">
-                    <div class="middle">
-                        <div class="label ouvintes" title="Ouvintes">
-                            <i class="material-icons">group</i><span class="value"> Radio Live</span>
-                        </div>
-                        <div class="label bitrate" title="Qualidade da transmissão">
-                            <i class="material-icons">settings_input_antenna</i><span class="value"> Radio Live</span>
-                        </div>
-                    </div>
-                </div>
-    </section>
+<center><section id="jp-jplayer">
+<div id="jquery_jplayer_1" class="jp-jplayer animated fadeInUp"></div>
+<div id="jp_container_1" class="jp-audio-stream" role="application" aria-label="media player">
+	<div class="jp-type-single">
+		<div class="jp-gui jp-interface">
+			<div class="jp-volume-controls">
+				<button class="jp-mute" role="button" tabindex="0">mute</button>
+				<button class="jp-volume-max" role="button" tabindex="0">max volume</button>
+				<div class="jp-volume-bar">
+					<div class="jp-volume-bar-value"></div>
+				</div>
+			</div>
+			<div class="jp-controls">
+				<button class="jp-play" role="button" tabindex="0">play</button>
+			</div>
+		</div>
+		<div class="jp-details">
+			<div class="jp-title" aria-label="title">&nbsp;</div>
+		</div>
+		<div class="jp-no-solution">
+			<span>Update Required</span>
+			To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>.
+		</div>
+	</div>
+</div>
+	</section></center>
 	
 		</div>
 	</div>
